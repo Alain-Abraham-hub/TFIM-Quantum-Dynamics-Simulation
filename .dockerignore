@@ -1,0 +1,8 @@
+.git
+.gitignore
+.DS_Store
+__pycache__
+*.pyc
+.jupyter
+.ipynb_checkpoints
+*.ipynb_checkpoints
