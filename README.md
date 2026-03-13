@@ -24,6 +24,7 @@ This simulation uses Trotterization to approximate the time evolution operator a
 
 - **Quantum Circuit Construction**: Builds TFIM circuits using Trotterized time evolution
 - **Dual Execution**: Runs simulations on both local simulator and IBM Quantum hardware
+- **Docker Support**: Launches the notebook in a containerized environment with all dependencies preinstalled
 - **Observable Measurements**: Computes three key observables over time:
   - Average magnetization `<Z>`
   - Nearest-neighbor correlation `<ZᵢZᵢ₊₁>`
@@ -39,17 +40,27 @@ This simulation uses Trotterization to approximate the time evolution operator a
 
 ## Requirements
 
+### Local Python Environment
+
 - Python 3.8+
 - Qiskit
 - Qiskit Aer
 - Qiskit IBM Runtime
 - NumPy
 - Matplotlib
+- Jupyter
 
 Install dependencies:
 ```bash
-pip install qiskit qiskit-aer qiskit-ibm-runtime numpy matplotlib
+pip install -r requirements.txt
 ```
+
+### Docker Environment
+
+- Docker
+- Docker Compose
+
+The repository includes a `Dockerfile` and `docker-compose.yml` for running the notebook without installing Python packages on your host machine.
 
 ## Setup
 
@@ -57,7 +68,11 @@ pip install qiskit qiskit-aer qiskit-ibm-runtime numpy matplotlib
    - Sign up at [IBM Quantum](https://quantum.ibm.com/)
    - Navigate to your account settings and copy your API token
 
-2. **Configure the Notebook**:
+2. **Choose an execution method**:
+   - **Local**: install dependencies from `requirements.txt`
+   - **Docker**: build and run the included container setup
+
+3. **Configure the Notebook**:
    - Open `tfim_dynamics_simulator.ipynb`
    - In the "Backend" cell, replace the token with your IBM Quantum API key:
      ```python
@@ -68,6 +83,8 @@ pip install qiskit qiskit-aer qiskit-ibm-runtime numpy matplotlib
      ```
 
 ## Usage
+
+### Option 1: Run Locally
 
 1. Open the Jupyter notebook:
    ```bash
@@ -82,6 +99,20 @@ pip install qiskit qiskit-aer qiskit-ibm-runtime numpy matplotlib
    - **Backend**: Connect to IBM Quantum and select a backend
    - **Time Evolution**: Execute the simulation
    - **Plotting**: Visualize the results
+
+### Option 2: Run with Docker
+
+1. Start the containerized notebook server:
+   ```bash
+   docker-compose up
+   ```
+
+2. Open Jupyter in your browser:
+   - `http://localhost:8888`
+
+3. Open `tfim_dynamics_simulator.ipynb` and run the cells sequentially.
+
+For Docker-specific commands, troubleshooting, and rebuild instructions, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).
 
 ## Parameters
 
@@ -137,8 +168,13 @@ where `n` is the number of Trotter steps and `t = n·dt`.
 
 ```
 TFIM-Qunatum-Dynamics-Simulation/
+├── DOCKER_GUIDE.md                  # Docker setup and troubleshooting guide
+├── docker-compose.yml              # Docker Compose configuration for Jupyter
+├── Dockerfile                      # Container image definition
 ├── README.md                        # This file
+├── requirements.txt                 # Python dependencies
 ├── tfim_dynamics_simulator.ipynb    # Main simulation notebook
+├── images/                          # Circuit and result plots
 └── LICENSE                          # License file
 ```
 
@@ -147,6 +183,7 @@ TFIM-Qunatum-Dynamics-Simulation/
 - Running on real IBM Quantum hardware requires queue time and may take several minutes to hours depending on backend availability
 - Hardware results will show noise effects compared to ideal simulator results
 - The `least_busy()` function automatically selects the most available quantum backend with at least 4 qubits
+- The Docker setup exposes Jupyter on port `8888` and mounts the notebook and `images/` directory for live editing
 
 ## License
 
